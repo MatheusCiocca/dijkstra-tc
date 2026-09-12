@@ -1,8 +1,16 @@
+"""Núcleo interno de busca compartilhado por Dijkstra e A*.
+
+Implementa a seleção gulosa do vértice de menor prioridade (distância, no caso
+de Dijkstra; distância mais heurística, no caso de A*), a validação de
+heurísticas consistentes e a reconstrução do caminho até um destino.
+"""
+
 from dataclasses import dataclass
 from math import inf
 
 from caminhos_minimos.grafo import (
     Grafo,
+    Heuristica,
     Peso,
     somar_custos,
     validar_grafo,
@@ -12,6 +20,8 @@ from caminhos_minimos.grafo import (
 
 @dataclass
 class _ResultadoBusca:
+    """Resultado bruto de uma busca: distâncias, predecessores e vértices fixados."""
+
     distancias: dict[str, Peso]
     anteriores: dict[str, str]
     vertices_expandidos: int
@@ -20,6 +30,10 @@ class _ResultadoBusca:
 def reconstruir_caminho(
     anteriores: dict[str, str], origem: str, destino: str
 ) -> list[str]:
+    """Reconstrói o caminho de ``origem`` até ``destino`` a partir dos predecessores.
+
+    Retorna a lista vazia quando ``destino`` não foi alcançado pela busca.
+    """
     if destino != origem and destino not in anteriores:
         return []
     caminho = [destino]
@@ -29,8 +43,15 @@ def reconstruir_caminho(
 
 
 def _calcular_heuristica_consistente(
-    grafo: Grafo, destino: str | None, heuristica
+    grafo: Grafo, destino: str | None, heuristica: Heuristica | None
 ) -> dict[str, Peso]:
+    """Calcula e valida as estimativas de heurística para todos os vértices.
+
+    Sem ``heuristica``, retorna zero para todos os vértices (equivalente a
+    Dijkstra). Com ``heuristica``, exige um ``destino``, valores não negativos,
+    estimativa zero no destino e consistência (`h(u) <= w(u,v) + h(v)`) em
+    todas as arestas do grafo.
+    """
     if heuristica is None:
         return dict.fromkeys(grafo, 0)
     if destino is None:
@@ -53,10 +74,18 @@ def _executar_busca(
     grafo: Grafo,
     origem: str,
     destino: str | None = None,
-    heuristica=None,
+    heuristica: Heuristica | None = None,
     *,
     parar_no_destino: bool = True,
 ) -> _ResultadoBusca:
+    """Executa a busca gulosa de fonte única (Dijkstra ou A*, conforme a heurística).
+
+    A cada passo, fixa o vértice não visitado de menor prioridade (distância
+    mais heurística) e relaxa suas arestas de saída. Sem ``heuristica``, o
+    comportamento é o de Dijkstra puro. Com ``parar_no_destino=True``, encerra
+    assim que ``destino`` é fixado; caso contrário, prossegue até esgotar os
+    vértices alcançáveis, retornando o vetor completo de distâncias.
+    """
     validar_grafo(grafo)
     if origem not in grafo:
         raise KeyError(f"vértice de origem inexistente: {origem!r}")

@@ -1,11 +1,21 @@
+"""Tipos e validação pura das restrições do problema de caminhos mínimos."""
+
+from collections.abc import Callable
 from math import isfinite
 from typing import TypeAlias
 
 Peso: TypeAlias = int | float
+"""Peso de uma aresta ou heurística: inteiro ou ponto flutuante não negativo e finito."""
+
 Grafo: TypeAlias = dict[str, dict[str, Peso]]
+"""Grafo direcionado como dicionário de adjacência: vértice -> {vizinho: peso}."""
+
+Heuristica: TypeAlias = Callable[[str, str], Peso]
+"""Estimativa de custo restante: recebe (vértice, destino) e retorna um peso."""
 
 
 def validar_numero_nao_negativo(valor: Peso, nome_campo: str) -> None:
+    """Garante que ``valor`` é um número finito e não negativo, ou levanta ValueError."""
     if isinstance(valor, bool) or not isinstance(valor, (int, float)):
         raise ValueError(f"{nome_campo} deve ser um número não negativo")
     if valor < 0:
@@ -15,6 +25,7 @@ def validar_numero_nao_negativo(valor: Peso, nome_campo: str) -> None:
 
 
 def validar_grafo(grafo: Grafo) -> None:
+    """Valida a estrutura do grafo e as restrições de vértices e pesos das arestas."""
     if not isinstance(grafo, dict):
         raise ValueError("o grafo deve ser um dicionário de adjacência")
     for origem, vizinhos in grafo.items():
@@ -29,6 +40,7 @@ def validar_grafo(grafo: Grafo) -> None:
 
 
 def somar_custos(primeiro_custo: Peso, segundo_custo: Peso) -> Peso:
+    """Soma dois custos, convertendo estouro de ponto flutuante em ValueError."""
     try:
         custo_total = primeiro_custo + segundo_custo
     except OverflowError as erro:

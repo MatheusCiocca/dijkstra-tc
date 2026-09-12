@@ -1,3 +1,5 @@
+"""Leitura e gravação de grafos em arquivos JSON e CSV."""
+
 import csv
 import json
 from pathlib import Path
@@ -5,8 +7,11 @@ from pathlib import Path
 from caminhos_minimos.grafo import Grafo, Peso, validar_grafo
 
 
-def _objeto_json_sem_chaves_duplicadas(pares_chave_valor: list[tuple]) -> dict:
-    objeto_json = {}
+def _objeto_json_sem_chaves_duplicadas(
+    pares_chave_valor: list[tuple[str, object]],
+) -> dict[str, object]:
+    """Reconstrói um objeto JSON como ``dict``, rejeitando chaves duplicadas."""
+    objeto_json: dict[str, object] = {}
     for chave, valor in pares_chave_valor:
         if chave in objeto_json:
             raise ValueError(f"chave duplicada no JSON: {chave!r}")
@@ -15,6 +20,7 @@ def _objeto_json_sem_chaves_duplicadas(pares_chave_valor: list[tuple]) -> dict:
 
 
 def _converter_peso_csv(peso_texto: str, numero_linha: int) -> Peso:
+    """Converte o texto de um peso do CSV para ``int`` ou ``float``."""
     try:
         return int(peso_texto)
     except ValueError:
@@ -25,6 +31,10 @@ def _converter_peso_csv(peso_texto: str, numero_linha: int) -> Peso:
 
 
 def carregar_grafo(caminho: str | Path) -> Grafo:
+    """Carrega um grafo de um arquivo ``.json`` ou ``.csv`` e valida suas restrições.
+
+    Completa vértices de destino implícitos com ``{}`` antes de validar.
+    """
     caminho = Path(caminho)
     if caminho.suffix.lower() == ".csv":
         grafo = _carregar_csv(caminho)
@@ -40,6 +50,7 @@ def carregar_grafo(caminho: str | Path) -> Grafo:
 
 
 def _completar_vertices_de_destino(grafo: Grafo) -> None:
+    """Adiciona, com adjacência vazia, os vértices de destino ainda ausentes como chave."""
     for vizinhos in list(grafo.values()):
         if isinstance(vizinhos, dict):
             for destino in vizinhos:
@@ -47,6 +58,7 @@ def _completar_vertices_de_destino(grafo: Grafo) -> None:
 
 
 def _carregar_json(caminho: Path) -> Grafo:
+    """Lê um grafo de um arquivo JSON, aceitando o envelope opcional ``grafo``/``graph``."""
     with caminho.open(encoding="utf-8") as arquivo:
         grafo = json.load(arquivo, object_pairs_hook=_objeto_json_sem_chaves_duplicadas)
     if isinstance(grafo, dict) and len(grafo) == 1:
@@ -60,6 +72,10 @@ def _carregar_json(caminho: Path) -> Grafo:
 
 
 def _carregar_csv(caminho: Path) -> Grafo:
+    """Lê um grafo de um arquivo CSV com colunas ``origem,destino,peso``.
+
+    Uma linha com destino e peso vazios declara um vértice isolado.
+    """
     grafo: Grafo = {}
     with caminho.open(newline="", encoding="utf-8-sig") as arquivo:
         leitor_csv = csv.DictReader(arquivo)
@@ -93,6 +109,7 @@ def _carregar_csv(caminho: Path) -> Grafo:
 
 
 def salvar_grafo(grafo: Grafo, caminho: str | Path) -> None:
+    """Valida e grava ``grafo`` em ``.json`` ou ``.csv``, conforme a extensão de ``caminho``."""
     validar_grafo(grafo)
     caminho = Path(caminho)
     if caminho.suffix.lower() == ".json":

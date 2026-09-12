@@ -1,3 +1,5 @@
+"""Desenho dos grafos e das métricas de tempo com Matplotlib e NetworkX."""
+
 from itertools import pairwise
 from math import isfinite
 from pathlib import Path
@@ -15,6 +17,12 @@ import matplotlib.pyplot as plt
 def desenhar_grafo(
     grafo: Grafo, caminho: list[str] | None = None, saida: str | Path = "grafo.png"
 ) -> None:
+    """Desenha ``grafo`` e salva a imagem em ``saida``, destacando ``caminho`` em vermelho.
+
+    Com mais de 80 arestas, omite os rótulos de peso e ajusta o layout
+    (circular, linhas mais finas e transparentes) para reduzir a sobreposição
+    de rótulos; todos os vértices e arestas continuam desenhados.
+    """
     validar_grafo(grafo)
     rede = nx.DiGraph()
     rede.add_nodes_from(grafo)
@@ -71,6 +79,10 @@ def desenhar_grafo(
 
 
 def desenhar_comparacao(resultados: list[dict[str, Any]], saida: str | Path) -> None:
+    """Desenha, em barras, o tempo mediano e o desvio padrão de cada algoritmo avaliado.
+
+    Espera o formato retornado por :func:`complementos.avaliacao.avaliar`.
+    """
     nomes = [resultado["algoritmo"] for resultado in resultados]
     metricas = [
         ("tempo_execucao_ms", "Tempo mediano", "Milissegundos"),

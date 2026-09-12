@@ -1,3 +1,5 @@
+"""Exportação dos resultados da avaliação em JSON, CSV e HTML."""
+
 import csv
 import json
 from html import escape
@@ -7,6 +9,11 @@ from typing import Any
 
 
 def _normalizar_numeros_nao_finitos(valor: Any) -> Any:
+    """Substitui ``float`` não finito (NaN, infinito) por ``None``, recursivamente.
+
+    Necessário porque JSON não representa esses valores; usado antes de
+    serializar ou formatar as distâncias inalcançáveis (``math.inf``).
+    """
     if isinstance(valor, float) and not isfinite(valor):
         return None
     if isinstance(valor, dict):
@@ -20,6 +27,13 @@ def _normalizar_numeros_nao_finitos(valor: Any) -> Any:
 
 
 def exportar_relatorio(resultados: list[dict[str, Any]], caminho: str | Path) -> None:
+    """Exporta ``resultados`` (uma entrada por algoritmo avaliado) para um arquivo.
+
+    O formato é escolhido pela extensão de ``caminho``: ``.json`` preserva o
+    vetor de distâncias como lista; ``.csv`` e ``.html`` (ou ``.htm``)
+    formatam o vetor e o caminho como texto, com "inalcançável" nas posições
+    sem caminho. O HTML escapa os valores de entrada.
+    """
     caminho = Path(caminho)
     if caminho.suffix.lower() == ".json":
         caminho.write_text(

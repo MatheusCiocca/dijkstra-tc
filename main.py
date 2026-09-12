@@ -1,3 +1,5 @@
+"""Ponto de entrada em linha de comando: argumentos, coordenação e mensagens do terminal."""
+
 import argparse
 import json
 from functools import partial
@@ -14,6 +16,7 @@ from complementos.relatorios import exportar_relatorio
 
 
 def criar_analisador() -> argparse.ArgumentParser:
+    """Monta o analisador de argumentos da linha de comando."""
     analisador = argparse.ArgumentParser(description="Caminhos mínimos de fonte única")
     analisador.add_argument("conjunto_dados", help="arquivo .json ou .csv")
     analisador.add_argument("origem", help="vértice de origem")
@@ -39,6 +42,13 @@ def criar_analisador() -> argparse.ArgumentParser:
 
 
 def executar(argumentos: argparse.Namespace) -> None:
+    """Carrega o grafo, roda Dijkstra (e A* se houver destino) e exporta os resultados.
+
+    Sem ``destino``, avalia somente Dijkstra. Com ``destino``, avalia também
+    A* (com a heurística de ``--heuristica``, se informada) e exige que ambos
+    produzam o mesmo vetor de distâncias de fonte única. Ao final, salva o
+    relatório e, se solicitado, o grafo e o gráfico comparativo de tempos.
+    """
     grafo = carregar_grafo(argumentos.conjunto_dados)
     if argumentos.destino is None and argumentos.heuristica:
         raise ValueError("--heuristica exige um destino")
@@ -106,6 +116,7 @@ def executar(argumentos: argparse.Namespace) -> None:
 
 
 def principal() -> None:
+    """Ponto de entrada do CLI: analisa os argumentos e trata erros esperados."""
     analisador = criar_analisador()
     try:
         executar(analisador.parse_args())

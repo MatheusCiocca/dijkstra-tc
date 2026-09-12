@@ -1,3 +1,5 @@
+"""Geração e gravação de datasets de grafos aleatórios em JSON."""
+
 import argparse
 from pathlib import Path
 from random import Random
@@ -11,6 +13,13 @@ def gerar_grafo_aleatorio(
     probabilidade_aresta: float = 0.2,
     semente: int | None = 0,
 ) -> Grafo:
+    """Gera um grafo aleatório com ``quantidade_vertices`` vértices ``"0"..str(n-1)``.
+
+    Para cada par ordenado de vértices distintos, inclui a aresta com
+    probabilidade ``probabilidade_aresta`` e peso inteiro sorteado entre 1 e
+    100. ``semente`` permite reproduzir o mesmo grafo; pode gerar grafos
+    desconexos e não garante a existência de caminhos entre vértices.
+    """
     if (
         isinstance(quantidade_vertices, bool)
         or not isinstance(quantidade_vertices, int)
@@ -33,6 +42,12 @@ def gerar_grafo_aleatorio(
 
 
 def gerar_dataset(pasta_saida: Path, semente: int = 42) -> list[Path]:
+    """Gera e salva, em ``pasta_saida``, seis grafos aleatórios em JSON.
+
+    Combina os tamanhos 10, 50 e 100 vértices com as probabilidades de aresta
+    0,1 e 0,5, todos com a mesma ``semente``. Cria a pasta se necessário e
+    substitui arquivos homônimos. Retorna os caminhos dos arquivos gerados.
+    """
     pasta_saida.mkdir(parents=True, exist_ok=True)
     arquivos_gerados = []
     for quantidade_vertices in (10, 50, 100):

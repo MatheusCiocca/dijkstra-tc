@@ -1,3 +1,5 @@
+"""Medição de algoritmos recebidos como funções e textos dos limites teóricos usados nos relatórios."""
+
 from collections.abc import Callable
 from statistics import median, pstdev
 from time import perf_counter
@@ -11,6 +13,11 @@ def _aquecer_algoritmos(
     origem: str,
     algoritmos: dict[str, Callable[[Grafo, str], list[Peso]]],
 ) -> dict[str, list[Peso]]:
+    """Executa cada algoritmo uma vez (aquecimento) e valida o formato do retorno.
+
+    Retorna o vetor de distâncias de cada algoritmo, usado como referência
+    para checar a estabilidade entre repetições em :func:`_medir_tempos_execucao`.
+    """
     quantidade_vertices = len(grafo)
     distancias_referencia = {}
     for nome_algoritmo, algoritmo in algoritmos.items():
@@ -34,6 +41,12 @@ def _medir_tempos_execucao(
     repeticoes: int,
     distancias_referencia: dict[str, list[Peso]],
 ) -> dict[str, list[float]]:
+    """Mede, em milissegundos, o tempo de cada repetição de cada algoritmo.
+
+    Alterna a ordem de execução entre repetições para reduzir viés de cache e
+    de aquecimento entre os algoritmos comparados. Levanta ``ValueError`` se
+    algum algoritmo produzir um vetor de distâncias diferente do de referência.
+    """
     tempos_por_algoritmo_ms: dict[str, list[float]] = {
         nome_algoritmo: [] for nome_algoritmo in algoritmos
     }
@@ -59,6 +72,16 @@ def avaliar(
     algoritmos: dict[str, Callable[[Grafo, str], list[Peso]]],
     repeticoes: int = 7,
 ) -> list[dict[str, Any]]:
+    """Avalia ``algoritmos`` sobre ``grafo`` a partir de ``origem`` e mede seus tempos.
+
+    Cada função em ``algoritmos`` deve aceitar ``(grafo, origem)`` e retornar
+    uma lista com uma distância por vértice, na ordem das chaves de ``grafo``.
+    Executa uma repetição de aquecimento por algoritmo (fora da medição) e,
+    em seguida, ``repeticoes`` medições, verificando a estabilidade dos
+    resultados entre elas. Retorna uma lista com um dicionário de métricas por
+    algoritmo: distâncias, tempo mediano e desvio padrão (em milissegundos),
+    tamanho da instância e complexidade teórica.
+    """
     if (
         isinstance(repeticoes, bool)
         or not isinstance(repeticoes, int)
