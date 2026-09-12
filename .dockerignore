@@ -1,0 +1,13 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+.pytest_cache
+*.png
+*.html
+.venv
+.agents
+.codex
+.vscode
+.ruff_cache
+resultados
