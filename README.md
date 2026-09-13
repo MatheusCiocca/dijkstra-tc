@@ -53,10 +53,10 @@ Reconstrua a imagem após alterar o código.
 | Integrante | Matrícula |
 |---|---:|
 | Mariana Padilha | 2410100712 |
-| Emanuel Carricio | 223941292 |
-| Matheus Ciocca | 239999999 |
-| Rafaela Nunes | 2188988983 |
-| Livia Barbosa | 249898898 |
+| Emanuel Carricio | 2310100403 |
+| Matheus Ciocca | 2310101609 |
+| Rafaela Nunes | 2510101040 |
+| Livia Barbosa | 2310100418 |
 
 ## Problema, instância, entrada, saída e restrições
 
