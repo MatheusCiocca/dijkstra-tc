@@ -29,7 +29,7 @@ por exemplo: `from caminhos_minimos.algoritmos import dijkstra`.
 | `main.py` | Ponto de entrada, argumentos, coordenação e mensagens do terminal. |
 | `caminhos_minimos/grafo.py` | Tipos e validação pura das restrições. |
 | `caminhos_minimos/algoritmos.py` | Consultas com Dijkstra, com vetor completo ou caminho até um destino. |
-| `caminhos_minimos/_busca.py` | Núcleo interno de busca, validação de heurísticas e reconstrução de caminhos, compartilhado por Dijkstra e A*. |
+| `caminhos_minimos/busca.py` | Núcleo interno de busca, validação de heurísticas e reconstrução de caminhos, compartilhado por Dijkstra e A*. |
 | `caminhos_minimos/ler_salvar_grafos.py` | Leitura e gravação de grafos em arquivos JSON e CSV. |
 | `complementos/a_estrela.py` | Consultas complementares com A*, com vetor completo ou caminho até um destino. |
 | `complementos/avaliacao.py` | Medição de algoritmos recebidos como funções e textos dos limites teóricos usados nos relatórios. |

@@ -50,7 +50,8 @@ def carregar_grafo(caminho: str | Path) -> Grafo:
 
 
 def _completar_vertices_de_destino(grafo: Grafo) -> None:
-    """Adiciona, com adjacência vazia, os vértices de destino ainda ausentes como chave."""
+    """Adiciona, com adjacência vazia, os vértices de destino ainda ausentes como
+    chave."""
     for vizinhos in list(grafo.values()):
         if isinstance(vizinhos, dict):
             for destino in vizinhos:
@@ -58,7 +59,8 @@ def _completar_vertices_de_destino(grafo: Grafo) -> None:
 
 
 def _carregar_json(caminho: Path) -> Grafo:
-    """Lê um grafo de um arquivo JSON, aceitando o envelope opcional ``grafo``/``graph``."""
+    """Lê um grafo de um arquivo JSON, aceitando o envelope opcional
+    ``grafo``/``graph``."""
     with caminho.open(encoding="utf-8") as arquivo:
         grafo = json.load(arquivo, object_pairs_hook=_objeto_json_sem_chaves_duplicadas)
     if isinstance(grafo, dict) and len(grafo) == 1:
@@ -109,7 +111,8 @@ def _carregar_csv(caminho: Path) -> Grafo:
 
 
 def salvar_grafo(grafo: Grafo, caminho: str | Path) -> None:
-    """Valida e grava ``grafo`` em ``.json`` ou ``.csv``, conforme a extensão de ``caminho``."""
+    """Valida e grava ``grafo`` em ``.json`` ou ``.csv``, conforme a extensão de
+    ``caminho``."""
     validar_grafo(grafo)
     caminho = Path(caminho)
     if caminho.suffix.lower() == ".json":

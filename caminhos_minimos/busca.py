@@ -3,6 +3,11 @@
 Implementa a seleção gulosa do vértice de menor prioridade (distância, no caso
 de Dijkstra; distância mais heurística, no caso de A*), a validação de
 heurísticas consistentes e a reconstrução do caminho até um destino.
+
+Detalhe de implementação usado por :mod:`caminhos_minimos.algoritmos` e por
+:mod:`complementos.a_estrela`; não faz parte da API pública do projeto, que é
+exposta por essas duas funções (``dijkstra``, ``dijkstra_com_caminho`` e
+``a_estrela``).
 """
 
 from dataclasses import dataclass
@@ -70,7 +75,7 @@ def _calcular_heuristica_consistente(
     return estimativas
 
 
-def _executar_busca(
+def executar_busca(
     grafo: Grafo,
     origem: str,
     destino: str | None = None,

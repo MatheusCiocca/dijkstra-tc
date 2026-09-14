@@ -17,14 +17,15 @@ import matplotlib.pyplot as plt
 def desenhar_grafo(
     grafo: Grafo, caminho: list[str] | None = None, saida: str | Path = "grafo.png"
 ) -> None:
-    """Desenha ``grafo`` e salva a imagem em ``saida``, destacando ``caminho`` em vermelho.
+    """Desenha ``grafo`` e salva a imagem em ``saida``, destacando ``caminho`` em
+    vermelho.
 
     Com mais de 80 arestas, omite os rótulos de peso e ajusta o layout
     (circular, linhas mais finas e transparentes) para reduzir a sobreposição
     de rótulos; todos os vértices e arestas continuam desenhados.
     """
     validar_grafo(grafo)
-    rede = nx.DiGraph()
+    rede: nx.DiGraph[str] = nx.DiGraph()
     rede.add_nodes_from(grafo)
     for origem, vizinhos in grafo.items():
         for destino, peso in vizinhos.items():
@@ -36,7 +37,9 @@ def desenhar_grafo(
     if grafo_denso or grafo_desconexo:
         posicoes = nx.circular_layout(rede)
     else:
-        posicoes = nx.spring_layout(rede, seed=42, weight=None)
+        # weight=None é válido em tempo de execução (trata arestas como sem peso),
+        # mas o stub de tipos do NetworkX só declara `weight: str`.
+        posicoes = nx.spring_layout(rede, seed=42, weight=None)  # type: ignore[arg-type]
     arestas_caminho = set(pairwise(caminho or []))
     cor_aresta = (0.30, 0.47, 0.72, 0.15) if grafo_denso else "#4c78a8"
     cores = [

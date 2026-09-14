@@ -1,10 +1,12 @@
-"""Demonstração isolada da falha de Dijkstra com peso negativo, fora das restrições do projeto."""
+"""Demonstração isolada da falha de Dijkstra com peso negativo, fora das
+restrições do projeto."""
 
 from math import inf
 
 
 def demonstrar_falha_com_peso_negativo() -> dict[str, int | float]:
-    """Roda Dijkstra sem validação sobre um grafo com peso negativo e retorna as distâncias.
+    """Roda Dijkstra sem validação sobre um grafo com peso negativo e retorna as
+    distâncias.
 
     Reproduz o contraexemplo do README: a aresta negativa ``C -> B`` melhora
     um vértice (``B``) já fixado, invalidando o argumento de correção do
@@ -15,7 +17,7 @@ def demonstrar_falha_com_peso_negativo() -> dict[str, int | float]:
     grafo = {"A": {"B": 2, "C": 5}, "B": {"D": 2}, "C": {"B": -4}, "D": {}}
     distancias = dict.fromkeys(grafo, inf)
     distancias["A"] = 0
-    fixados = set()
+    fixados: set[str] = set()
     while len(fixados) < len(grafo):
         atual = min(
             (vertice for vertice in grafo if vertice not in fixados),

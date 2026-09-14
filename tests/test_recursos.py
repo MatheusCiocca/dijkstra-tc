@@ -349,7 +349,9 @@ def test_terminal_fonte_unica_comparacao_e_erro(tmp_path):
     assert len(relatorio) == 1
     assert relatorio[0]["repeticoes"] == 7
     assert relatorio[0]["tempo_execucao_ms"] >= 0
-    distancias = dict(zip(relatorio[0]["ordem_vertices"], relatorio[0]["distancias"]))
+    distancias = dict(
+        zip(relatorio[0]["ordem_vertices"], relatorio[0]["distancias"], strict=True)
+    )
     assert distancias == {
         "0": 0,
         "1": 2,

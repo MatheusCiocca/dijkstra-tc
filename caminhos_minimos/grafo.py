@@ -5,7 +5,8 @@ from math import isfinite
 from typing import TypeAlias
 
 Peso: TypeAlias = int | float
-"""Peso de uma aresta ou heurística: inteiro ou ponto flutuante não negativo e finito."""
+"""Peso de uma aresta ou heurística: inteiro ou ponto flutuante não negativo e
+finito."""
 
 Grafo: TypeAlias = dict[str, dict[str, Peso]]
 """Grafo direcionado como dicionário de adjacência: vértice -> {vizinho: peso}."""
@@ -15,7 +16,8 @@ Heuristica: TypeAlias = Callable[[str, str], Peso]
 
 
 def validar_numero_nao_negativo(valor: Peso, nome_campo: str) -> None:
-    """Garante que ``valor`` é um número finito e não negativo, ou levanta ValueError."""
+    """Garante que ``valor`` é um número finito e não negativo, ou levanta
+    ValueError."""
     if isinstance(valor, bool) or not isinstance(valor, (int, float)):
         raise ValueError(f"{nome_campo} deve ser um número não negativo")
     if valor < 0:

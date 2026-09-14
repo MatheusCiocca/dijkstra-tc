@@ -1,6 +1,7 @@
-"""Consultas de caminhos mínimos com Dijkstra: vetor completo ou caminho até um destino."""
+"""Consultas de caminhos mínimos com Dijkstra: vetor completo ou caminho até um
+destino."""
 
-from caminhos_minimos._busca import _executar_busca, reconstruir_caminho
+from caminhos_minimos.busca import executar_busca, reconstruir_caminho
 from caminhos_minimos.grafo import Grafo, Peso
 
 
@@ -10,7 +11,7 @@ def buscar(grafo: Grafo, origem: str) -> list[Peso]:
     Retorna um vetor na ordem das chaves de ``grafo``; vértices inalcançáveis
     recebem ``math.inf``.
     """
-    resultado = _executar_busca(grafo, origem)
+    resultado = executar_busca(grafo, origem)
     return [resultado.distancias[vertice] for vertice in grafo]
 
 
@@ -28,6 +29,6 @@ def dijkstra_com_caminho(
     caminho como lista de vértices (vazia se inalcançável) e a quantidade de
     vértices fixados até a parada.
     """
-    resultado = _executar_busca(grafo, origem, destino)
+    resultado = executar_busca(grafo, origem, destino)
     caminho = reconstruir_caminho(resultado.anteriores, origem, destino)
     return resultado.distancias[destino], caminho, resultado.vertices_expandidos

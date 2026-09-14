@@ -1,4 +1,5 @@
-"""Ponto de entrada em linha de comando: argumentos, coordenação e mensagens do terminal."""
+"""Ponto de entrada em linha de comando: argumentos, coordenação e mensagens do
+terminal."""
 
 import argparse
 import json
@@ -75,7 +76,7 @@ def executar(argumentos: argparse.Namespace) -> None:
         algoritmos["a_estrela"] = algoritmo_a_estrela
     resultados = avaliar(grafo, argumentos.origem, algoritmos, argumentos.repeticoes)
     vetor_distancias = resultados[0]["distancias"]
-    distancias = dict(zip(grafo, vetor_distancias))
+    distancias = dict(zip(grafo, vetor_distancias, strict=True))
     for resultado in resultados:
         if resultado["distancias"] != vetor_distancias:
             raise ValueError(
@@ -103,9 +104,8 @@ def executar(argumentos: argparse.Namespace) -> None:
     print(f"Vértices: {list(grafo)}")
     print(f"Vetor de distâncias: {vetor_distancias}")
     for vertice, distancia in distancias.items():
-        print(
-            f"{argumentos.origem} → {vertice}: {distancia if distancia != inf else 'inalcançável'}"
-        )
+        texto_distancia = distancia if distancia != inf else "inalcançável"
+        print(f"{argumentos.origem} → {vertice}: {texto_distancia}")
     for resultado in resultados:
         print(
             f"{resultado['algoritmo']}: vetor completo, "

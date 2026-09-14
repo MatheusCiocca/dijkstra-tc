@@ -1,0 +1,23 @@
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+# Seleção explícita, e não os defaults da ferramenta: o Ruff 0.16.0 expandiu os
+# defaults de 59 para 413 regras, então depender deles deixa o projeto sujeito
+# a novos avisos a cada atualização da ferramenta, sem nenhuma mudança no código.
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF"]
+# TRY (tryceratops) não é selecionada: o projeto usa ValueError de propósito
+# para toda entrada externa inválida (JSON/CSV), inclusive quando a causa é um
+# tipo incorreto, para que o chamador só precise capturar uma família de erro.
+
+[tool.mypy]
+# Sem `python_version` fixo: os stubs do numpy (dependência do matplotlib) usam
+# sintaxe exclusiva do 3.12+, então fixar aqui a versão mínima do projeto (3.10)
+# quebra a leitura desses stubs. O mypy usa a versão do interpretador ativo.
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

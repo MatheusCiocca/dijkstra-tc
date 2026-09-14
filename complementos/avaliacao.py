@@ -1,6 +1,7 @@
-"""Medição de algoritmos recebidos como funções e textos dos limites teóricos usados nos relatórios."""
+"""Medição de algoritmos recebidos como funções e textos dos limites teóricos
+usados nos relatórios."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from statistics import median, pstdev
 from time import perf_counter
 from typing import Any
@@ -11,7 +12,7 @@ from caminhos_minimos.grafo import Grafo, Peso
 def _aquecer_algoritmos(
     grafo: Grafo,
     origem: str,
-    algoritmos: dict[str, Callable[[Grafo, str], list[Peso]]],
+    algoritmos: Mapping[str, Callable[[Grafo, str], list[Peso]]],
 ) -> dict[str, list[Peso]]:
     """Executa cada algoritmo uma vez (aquecimento) e valida o formato do retorno.
 
@@ -37,7 +38,7 @@ def _aquecer_algoritmos(
 def _medir_tempos_execucao(
     grafo: Grafo,
     origem: str,
-    algoritmos: dict[str, Callable[[Grafo, str], list[Peso]]],
+    algoritmos: Mapping[str, Callable[[Grafo, str], list[Peso]]],
     repeticoes: int,
     distancias_referencia: dict[str, list[Peso]],
 ) -> dict[str, list[float]]:
@@ -69,7 +70,7 @@ def _medir_tempos_execucao(
 def avaliar(
     grafo: Grafo,
     origem: str,
-    algoritmos: dict[str, Callable[[Grafo, str], list[Peso]]],
+    algoritmos: Mapping[str, Callable[[Grafo, str], list[Peso]]],
     repeticoes: int = 7,
 ) -> list[dict[str, Any]]:
     """Avalia ``algoritmos`` sobre ``grafo`` a partir de ``origem`` e mede seus tempos.
